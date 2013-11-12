@@ -30,7 +30,7 @@ class SimpleSummarizer:
 			input.find(s1) - input.find(s2) )
 		return output_sentences
 	
-	def get_summarized(self, input, num_sentences ):
+	def get_summarized(self, input, num_sentences, max_sent_length=None ):
 		# TODO: allow the caller to specify the tokenizer they want
 		# TODO: allow the user to specify the sentence tokenizer they want
 		
@@ -61,7 +61,8 @@ class SimpleSummarizer:
 
 		for word in most_frequent_words:
 			for i in range(0, len(working_sentences)):
-				if (word in working_sentences[i]
+				if ((not max_sent_length or len(working_sentences[i]) <= max_sent_length)
+				  and word in working_sentences[i]
 				  and actual_sentences[i] not in output_sentences):
 					output_sentences.append(actual_sentences[i])
 					break
@@ -71,5 +72,5 @@ class SimpleSummarizer:
 		# sort the output sentences back to their original order
 		return self.reorder_sentences(output_sentences, input)
 	
-	def summarize(self, input, num_sentences):
-		return " ".join(self.get_summarized(input, num_sentences))
+	def summarize(self, input, num_sentences, max_sent_length=None):
+		return " ".join(self.get_summarized(input, num_sentences, max_sent_length))
